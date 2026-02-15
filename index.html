@@ -1,0 +1,2175 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title></title>
+  <style>
+    /* =========================
+       THEME / RESET
+    ========================== */
+    :root{
+      --bg:#0b1020;
+      --bg2:#0e1630;
+      --card:#101b3d;
+      --card2:#0e1736;
+      --text:#eaf0ff;
+      --muted:#b9c5ff;
+      --muted2:#92a2e6;
+      --line:rgba(255,255,255,.10);
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --radius:18px;
+      --radius2:12px;
+
+      --brand:#7c5cff;
+      --brand2:#4fd1c5;
+      --danger:#ff4d6d;
+      --warn:#ffbf36;
+      --ok:#45d483;
+      --info:#4cb3ff;
+
+      --focus: 0 0 0 3px rgba(124,92,255,.35);
+      --font: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Tahoma, Arial;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 90% -10%, rgba(124,92,255,.28), transparent 60%),
+        radial-gradient(900px 600px at -10% 20%, rgba(79,209,197,.18), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      overflow-x:hidden;
+    }
+    a{color:inherit}
+    button, input, select, textarea{
+      font:inherit;
+      color:inherit;
+      background:transparent;
+      border:1px solid var(--line);
+      outline:none;
+    }
+    input,select,textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      transition:.15s;
+    }
+    input:focus,select:focus,textarea:focus{box-shadow:var(--focus); border-color:rgba(124,92,255,.55)}
+    textarea{min-height:90px; resize:vertical}
+    button{
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      transition:.15s;
+      background:rgba(255,255,255,.04);
+    }
+    button:hover{transform:translateY(-1px); border-color:rgba(255,255,255,.20)}
+    button:active{transform:translateY(0px)}
+    .btn{
+      display:inline-flex; align-items:center; gap:8px; justify-content:center;
+      border:1px solid var(--line);
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(255,255,255,.04);
+      user-select:none;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .btn.primary{
+      background:linear-gradient(135deg, rgba(124,92,255,.95), rgba(79,209,197,.55));
+      border-color:rgba(124,92,255,.55);
+      box-shadow:0 10px 25px rgba(124,92,255,.25);
+    }
+    .btn.danger{background:rgba(255,77,109,.10); border-color:rgba(255,77,109,.35)}
+    .btn.warn{background:rgba(255,191,54,.10); border-color:rgba(255,191,54,.35)}
+    .btn.ok{background:rgba(69,212,131,.10); border-color:rgba(69,212,131,.35)}
+    .btn.ghost{background:transparent}
+    .pill{
+      display:inline-flex; align-items:center; gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      font-size:12px;
+      color:var(--muted);
+    }
+    .pill.ok{border-color:rgba(69,212,131,.35); color:#bff7d6; background:rgba(69,212,131,.10)}
+    .pill.warn{border-color:rgba(255,191,54,.35); color:#ffe6a6; background:rgba(255,191,54,.10)}
+    .pill.danger{border-color:rgba(255,77,109,.35); color:#ffd0da; background:rgba(255,77,109,.10)}
+    .pill.info{border-color:rgba(76,179,255,.35); color:#cfeaff; background:rgba(76,179,255,.10)}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .hr{height:1px; background:var(--line); margin:12px 0}
+    .hidden{display:none !important}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace}
+
+    /* =========================
+       LAYOUT
+    ========================== */
+    .app{
+      display:grid;
+      grid-template-columns: 280px 1fr;
+      gap:16px;
+      padding:16px;
+      max-width: 1300px;
+      margin:0 auto;
+    }
+    @media (max-width: 820px){
+      .app{
+        grid-template-columns: 1fr;
+        padding:10px;
+      }
+    }
+    /* Force good look on 350px */
+    @media (max-width: 380px){
+      .app{padding:8px; gap:10px}
+      .card{border-radius:14px}
+      input,select,textarea,button,.btn{border-radius:12px}
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(16,27,61,.92), rgba(14,23,54,.88));
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    .card .head{
+      padding:14px 14px 10px;
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-bottom:1px solid rgba(255,255,255,.07);
+      background:rgba(255,255,255,.02);
+    }
+    .card .body{padding:14px}
+    .title{
+      display:flex; flex-direction:column; gap:4px;
+    }
+    .title b{font-size:15px}
+    .title span{font-size:12px; color:var(--muted)}
+    .stack{display:flex; flex-direction:column; gap:10px}
+    .row{display:flex; gap:10px; flex-wrap:wrap}
+    .row > *{flex:1 1 180px}
+    .row.tight > *{flex:1 1 140px}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      margin-bottom:10px;
+    }
+    .topbar .brand{
+      display:flex; align-items:center; gap:10px;
+    }
+    .logo{
+      width:38px; height:38px; border-radius:14px;
+      background:linear-gradient(135deg, rgba(124,92,255,.95), rgba(79,209,197,.65));
+      box-shadow:0 10px 25px rgba(124,92,255,.25);
+      display:grid; place-items:center;
+      font-weight:900;
+    }
+    .brand h1{
+      margin:0;
+      font-size:16px;
+      letter-spacing:.2px;
+    }
+    .brand p{
+      margin:0;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
+    .nav{
+      display:flex; flex-direction:column; gap:8px;
+      padding:12px;
+    }
+    .nav button{
+      text-align:right;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(255,255,255,.03);
+    }
+    .nav button.active{
+      background:linear-gradient(135deg, rgba(124,92,255,.18), rgba(79,209,197,.10));
+      border-color:rgba(124,92,255,.35);
+      box-shadow: 0 10px 25px rgba(124,92,255,.10);
+    }
+    .nav small{color:var(--muted); font-size:12px}
+    .nav .badge{
+      font-size:12px;
+      padding:4px 9px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--muted);
+      background:rgba(255,255,255,.03);
+      min-width: 34px;
+      text-align:center;
+    }
+
+    /* =========================
+       TABLE / LIST
+    ========================== */
+    .list{
+      display:flex; flex-direction:column; gap:8px;
+    }
+    .item{
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+      border-radius:14px;
+      padding:12px;
+      display:flex; justify-content:space-between; gap:10px;
+    }
+    .item:hover{border-color:rgba(255,255,255,.15)}
+    .item .meta{
+      display:flex; flex-direction:column; gap:6px;
+      min-width: 0;
+    }
+    .item .meta b{
+      font-size:14px;
+      overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+    }
+    .item .meta .sub{
+      display:flex; gap:8px; flex-wrap:wrap;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .item .ops{
+      display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end;
+      align-items:center;
+    }
+    .kpi{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap:10px;
+    }
+    @media (max-width: 980px){
+      .kpi{grid-template-columns: repeat(2,1fr)}
+    }
+    @media (max-width: 420px){
+      .kpi{grid-template-columns: 1fr}
+    }
+    .kpi .box{
+      padding:12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+    }
+    .kpi .box b{font-size:14px}
+    .kpi .box .n{font-size:22px; margin-top:6px; font-weight:900}
+    .kpi .box .h{font-size:12px; color:var(--muted); margin-top:6px}
+
+    /* =========================
+       MODAL
+    ========================== */
+    .overlay{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.55);
+      display:none;
+      align-items:center; justify-content:center;
+      padding:12px;
+      z-index: 50;
+    }
+    .overlay.show{display:flex}
+    .modal{
+      width:min(720px, 100%);
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(16,27,61,.98), rgba(14,23,54,.96));
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .modal .mhead{
+      padding:14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      display:flex; justify-content:space-between; align-items:center; gap:10px;
+      background:rgba(255,255,255,.02);
+    }
+    .modal .mbody{padding:14px}
+    .modal .mfoot{
+      padding:14px;
+      border-top:1px solid rgba(255,255,255,.08);
+      display:flex; justify-content:flex-start; gap:8px; flex-wrap:wrap;
+    }
+    .x{
+      width:40px; height:40px;
+      display:grid; place-items:center;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.03);
+    }
+
+    /* =========================
+       LOGIN
+    ========================== */
+    .loginWrap{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:16px;
+    }
+    .loginCard{
+      width:min(520px, 100%);
+      padding:16px;
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(16,27,61,.95), rgba(14,23,54,.90));
+      box-shadow:0 30px 80px rgba(0,0,0,.55);
+    }
+    .loginTop{
+      display:flex; align-items:center; gap:12px;
+      margin-bottom:12px;
+    }
+    .loginTop .logo{width:44px; height:44px; border-radius:18px}
+    .loginTop h2{margin:0; font-size:18px}
+    .loginTop p{margin:0; color:var(--muted); font-size:12px}
+    .hint{
+      font-size:12px;
+      color:var(--muted);
+      line-height:1.5;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(255,255,255,.02);
+    }
+
+    /* =========================
+       PRINT (optional)
+    ========================== */
+    @media print{
+      body{background:#fff; color:#000}
+      .card,.modal,.loginCard{box-shadow:none}
+      .nav, .actions, .btn, button, .overlay{display:none !important}
+      .app{grid-template-columns: 1fr; max-width:100%}
+      .card{border:1px solid #ddd; background:#fff}
+    }
+    body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--text);
+ background:
+  linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.7)),
+  url("https://images.unsplash.com/photo-1629909613654-28e377c37b09?q=80&w=1600&auto=format&fit=crop")
+  no-repeat center center fixed;
+background-size: cover;
+
+}
+.loginCard{
+  width:100%;
+  max-width:480px;
+  padding:40px;
+  border-radius:28px;
+
+  background:transparent;
+  backdrop-filter:blur(12px);
+
+  border:2px solid transparent;
+  background-clip:padding-box;
+
+  position:relative;
+}
+
+.loginCard::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:28px;
+  padding:2px;
+  background:linear-gradient(135deg,#d4af37,#f7e08a,#d4af37);
+  -webkit-mask:
+     linear-gradient(#000 0 0) content-box,
+     linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+.loginTop .logo{
+  width:55px;
+  height:55px;
+  border-radius:18px;
+
+  background:linear-gradient(135deg,#d4af37,#f7e08a);
+  color:#111;
+
+  font-weight:900;
+  font-size:20px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  box-shadow:0 0 25px rgba(212,175,55,.45);
+}
+.loginTop h2{
+  background:linear-gradient(90deg,#d4af37,#f7e08a,#d4af37);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.btn.primary{
+  background:linear-gradient(135deg,#d4af37,#f7e08a);
+  border:none;
+  color:#111;
+  font-weight:700;
+  letter-spacing:.5px;
+}
+
+.btn.primary:hover{
+  transform:translateY(-3px);
+  box-shadow:0 15px 35px rgba(212,175,55,.5);
+}
+#passInput{
+  border:2px solid #d4af37;
+  background:transparent;
+  color:#fff;
+  border-radius:14px;
+  padding:14px;
+  transition:.3s;
+}
+.loginCard::before{
+  pointer-events: none;
+}
+
+  </style>
+</head>
+<body>
+
+<!-- =========================
+     LOGIN VIEW
+========================== -->
+<div id="loginView" class="loginWrap hidden">
+  <div class="loginCard">
+    <div class="loginTop">
+      <div class="logo">R</div>
+      <div>
+        <h2>Royal Smile Clinic</h2>
+        <p> تسجيل دخول بكلمة مرور فقط (بدون اسم مستخدم) الرقم السري موجود فقط عند صاحب العيادة ومن مسؤل عن التسجيل</p>
+      </div>
+    </div>
+
+    <div class="stack">
+      <div class="hint">
+        <b>سيستم ذكي لأدارة العيادات </b>
+       
+        <div class="hr"></div>
+        📅 حجز وإدارة مواعيد المرضى
+👥 أرشيف كامل للمرضى (تاريخ، جلسات، ملاحظات)
+🔢 متابعة عدد الجلسات لكل مريض
+💰 تسجيل الدفعات والحسابات
+      </div>
+
+      <div>
+        <label class="muted">كلمة المرور</label>
+        <br><br>
+        <input id="passInput" type="password" placeholder="••••••••" autocomplete="current-password" />
+      </div>
+      <br>
+      <div class="row tight">
+        <button class="btn primary" id="loginBtn">دخول</button>
+        <button class="btn warn" id="resetPassBtn" title="يمسح كلمة المرور (يحتاج تأكيد)">إعادة تعيين كلمة المرور</button>
+      </div>
+
+      <div id="loginMsg" class="hint hidden"></div>
+    </div>
+  </div>
+</div>
+
+<!-- =========================
+     APP VIEW
+========================== -->
+<div id="appView" class="app hidden">
+
+  <!-- SIDEBAR -->
+  <div class="card">
+    <div class="head">
+      <div class="title">
+        <b>القائمة</b>
+        <span id="subStatus">جاهز</span>
+      </div>
+      <div class="pill info" id="todayPill">اليوم</div>
+    </div>
+    <div class="nav">
+      <button data-tab="dashboard" class="active">
+        <span>📊 لوحة التحكم</span>
+        <span class="badge" id="badgeDash">—</span>
+      </button>
+      <button data-tab="patients">
+        <span>🧾 المرضى</span>
+        <span class="badge" id="badgePatients">0</span>
+      </button>
+      <button data-tab="appointments">
+        <span>📅 المواعيد</span>
+        <span class="badge" id="badgeAppts">0</span>
+      </button>
+      <button data-tab="accounts">
+        <span>💳 الحسابات</span>
+        <span class="badge" id="badgePayments">0</span>
+      </button>
+      <button data-tab="settings">
+        <span>⚙️ إعدادات / نسخ احتياطي</span>
+        <span class="badge">↯</span>
+      </button>
+
+      <div class="hr"></div>
+
+      <button id="logoutBtn">
+        <span>🚪 تسجيل خروج</span>
+        <span class="badge">⏻</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="stack">
+
+    <div class="topbar">
+      <div class="brand">
+        <div style="background-color:gold ;" class="logo"><h1>R</h1></div>
+        <div>
+          <h1 id="pageTitle">لوحة التحكم</h1>
+          <p id="pageSub" class="muted">ملخص شامل + إجراءات سريعة</p>
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" id="quickAddPatient">+ مريض</button>
+        <button class="btn" id="quickAddAppt">+ موعد</button>
+        <button class="btn" id="quickAddPayment">+ دفعة</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div id="tab-dashboard" class="card">
+      <div class="head">
+        <div class="title">
+          <b>ملخص اليوم</b>
+          <span>نظرة سريعة على العيادة</span>
+        </div>
+        <div class="row tight" style="max-width:320px">
+          <button class="btn ghost" id="seedBtn" title="يضيف بيانات تجريبية (مرة واحدة)">⚡ بيانات تجريبية</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="kpi">
+          <div class="box">
+            <b>عدد المرضى</b>
+            <div class="n" id="kpiPatients">0</div>
+            <div class="h">الأرشيف الكامل</div>
+          </div>
+          <div class="box">
+            <b>مواعيد اليوم</b>
+            <div class="n" id="kpiTodayAppts">0</div>
+            <div class="h">اليوم فقط</div>
+          </div>
+          <div class="box">
+            <b>دفعات هذا الشهر</b>
+            <div class="n" id="kpiMonthPayments">0</div>
+            <div class="h">مجموع الدفعات</div>
+          </div>
+          <div class="box">
+            <b>رصيد مستحق</b>
+            <div class="n" id="kpiDue">0</div>
+            <div class="h">حسب الأسعار والدفعات</div>
+          </div>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="row">
+          <div class="card" style="box-shadow:none; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)">
+            <div class="head">
+              <div class="title">
+                <b>مواعيد قادمة</b>
+                <span>أقرب 7 أيام</span>
+              </div>
+              <div class="pill info" id="nextCountPill">0</div>
+            </div>
+            <div class="body">
+              <div id="dashUpcoming" class="list"></div>
+              <div id="dashUpcomingEmpty" class="hint">لا يوجد مواعيد قادمة…</div>
+            </div>
+          </div>
+
+          <div class="card" style="box-shadow:none; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)">
+            <div class="head">
+              <div class="title">
+                <b>تنبيهات</b>
+                <span>أشياء تحتاج انتباه</span>
+              </div>
+              <div class="pill warn">مهم</div>
+            </div>
+            <div class="body">
+              <div id="dashAlerts" class="list"></div>
+              <div id="dashAlertsEmpty" class="hint">كل شيء تمام 🎉</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PATIENTS -->
+    <div id="tab-patients" class="card hidden">
+      <div class="head">
+        <div class="title">
+          <b>المرضى</b>
+          <span>إضافة/بحث/متابعة/جلسات</span>
+        </div>
+        <div class="row tight" style="max-width:520px">
+          <input id="patientSearch" placeholder="ابحث: اسم / هاتف / رقم ملف…" />
+          <button class="btn primary" id="addPatientBtn">+ إضافة</button>
+        </div>
+      </div>
+      <div class="body">
+        <div id="patientsList" class="list"></div>
+        <div id="patientsEmpty" class="hint">ما في مرضى بعد. اضغط “إضافة”.</div>
+      </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <div id="tab-appointments" class="card hidden">
+      <div class="head">
+        <div class="title">
+          <b>المواعيد</b>
+          <span>حجز وإدارة المواعيد + فلترة</span>
+        </div>
+        <div class="row" style="max-width:720px">
+          <input id="apptSearch" placeholder="ابحث: اسم مريض / ملاحظة / حالة…" />
+          <input id="apptFrom" type="date" />
+          <input id="apptTo" type="date" />
+          <button class="btn primary" id="addApptBtn">+ موعد</button>
+        </div>
+      </div>
+      <div class="body">
+        <div class="row tight">
+          <select id="apptStatusFilter">
+            <option value="">كل الحالات</option>
+            <option value="scheduled">مجدول</option>
+            <option value="done">تم</option>
+            <option value="cancelled">ملغى</option>
+          </select>
+          <button class="btn" id="clearApptFilters">مسح الفلاتر</button>
+        </div>
+        <div class="hr"></div>
+        <div id="apptsList" class="list"></div>
+        <div id="apptsEmpty" class="hint">لا يوجد مواعيد ضمن الفلاتر الحالية.</div>
+      </div>
+    </div>
+
+    <!-- ACCOUNTS -->
+    <div id="tab-accounts" class="card hidden">
+      <div class="head">
+        <div class="title">
+          <b>الحسابات</b>
+          <span>دفعات + أرصدة + كشف حساب</span>
+        </div>
+        <div class="row tight" style="max-width:560px">
+          <input id="paySearch" placeholder="ابحث: اسم مريض / طريقة دفع / ملاحظة…" />
+          <button class="btn primary" id="addPaymentBtn">+ دفعة</button>
+        </div>
+      </div>
+      <div class="body">
+        <div id="paymentsList" class="list"></div>
+        <div id="paymentsEmpty" class="hint">لا يوجد دفعات بعد.</div>
+      </div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div id="tab-settings" class="card hidden">
+      <div class="head">
+        <div class="title">
+          <b>إعدادات / نسخ احتياطي</b>
+          <span>تصدير/استيراد/مسح البيانات</span>
+        </div>
+        <div class="pill info">Settings</div>
+      </div>
+      <div class="body">
+        <div class="row">
+          <div class="stack">
+            <div class="hint">
+              <b>نسخ احتياطي:</b> صدّر ملف JSON واحتفظ فيه خارج الجهاز.
+              <div class="hr"></div>
+              <span class="muted2">استيراد</span> سيستبدل البيانات الحالية.
+            </div>
+            <div class="row tight">
+              <button class="btn ok" id="exportBtn">⬇️ تصدير JSON</button>
+              <button class="btn warn" id="importBtn">⬆️ استيراد JSON</button>
+              <input id="importFile" type="file" accept="application/json" class="hidden"/>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="hint">
+              <b>تغيير كلمة المرور:</b> يتم حفظها مشفرة (SHA-256).
+              <div class="hr"></div>
+              <span class="muted2">ملاحظة:</span> لا يوجد اسم مستخدم حسب طلبك.
+            </div>
+            <div class="row tight">
+              <input id="newPass" type="password" placeholder="كلمة مرور جديدة" />
+              <button class="btn primary" id="changePassBtn">تغيير</button>
+            </div>
+
+            <div class="hr"></div>
+
+            <div class="hint">
+              <b class="mono">حالة التخزين</b>
+              <div class="hr"></div>
+              <div id="storageInfo" class="mono muted" style="font-size:12px">—</div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="hint">
+              <b>عمليات خطيرة:</b> استخدم بحذر.
+              <div class="hr"></div>
+              <span class="muted2">ممكن تعمل Reset كامل للبيانات.</span>
+            </div>
+            <button class="btn danger" id="wipeDataBtn">🧨 مسح كل بيانات العيادة</button>
+            <button class="btn danger" id="wipeAllBtn" title="يمسح كل شيء حتى كلمة المرور">🔥 مسح شامل (حتى كلمة المرور)</button>
+
+            <div class="hr"></div>
+
+            <div class="hint">
+              <b>طباعة:</b> يمكنك طباعة شاشة المريض (كشف حساب/متابعة) من المتصفح.
+              <div class="hr"></div>
+              من الموبايل: مشاركة > طباعة (حسب الجهاز).
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- =========================
+     MODAL (Reusable)
+========================== -->
+<div id="overlay" class="overlay">
+  <div class="modal">
+    <div class="mhead">
+      <div class="title">
+        <b id="modalTitle">—</b>
+        <span id="modalSub" class="muted">—</span>
+      </div>
+      <button class="x" id="modalClose" title="إغلاق">✕</button>
+    </div>
+    <div class="mbody" id="modalBody"></div>
+    <div class="mfoot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================================
+  CLINIC SYSTEM — SINGLE FILE (LocalStorage)
+  - Patients archive + follow-up
+  - Sessions count + quick add session
+  - Appointments CRUD + status
+  - Payments CRUD + balance
+  - Password-only login with SHA-256
+============================================================================ */
+
+/* =========================
+   UTILITIES
+========================= */
+const $ = (q, root=document) => root.querySelector(q);
+const $$ = (q, root=document) => Array.from(root.querySelectorAll(q));
+const fmtDate = (d) => {
+  const dt = new Date(d);
+  if (isNaN(dt)) return "—";
+  return dt.toLocaleDateString("ar-JO", {year:"numeric", month:"2-digit", day:"2-digit"});
+};
+const fmtTime = (d) => {
+  const dt = new Date(d);
+  if (isNaN(dt)) return "—";
+  return dt.toLocaleTimeString("ar-JO", {hour:"2-digit", minute:"2-digit"});
+};
+const fmtMoney = (n) => {
+  const x = Number(n||0);
+  return x.toLocaleString("ar-JO") + " د.أ";
+};
+const uid = () => (crypto.randomUUID ? crypto.randomUUID() : ("id_"+Math.random().toString(16).slice(2)+Date.now()));
+const clamp = (s, n=80) => (String(s||"").length>n ? String(s).slice(0,n-1)+"…" : String(s||""));
+const todayISO = () => new Date().toISOString().slice(0,10);
+const monthKey = () => new Date().toISOString().slice(0,7); // YYYY-MM
+function escapeHtml(str){
+  return String(str??"")
+    .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+}
+
+/* =========================
+   STORAGE
+========================= */
+const KEY = "CLINIC_SYS_V1";
+const PASS_KEY = "CLINIC_SYS_PASS_HASH_V1";
+const SESSION_KEY = "CLINIC_SYS_SESSION_V1";
+
+function loadDB(){
+  const raw = localStorage.getItem(KEY);
+  if(!raw){
+    const init = {
+      meta:{ createdAt: new Date().toISOString(), version:"1.0.0", clinicName:"عيادتي" },
+      patients:[],
+      appointments:[],
+      payments:[]
+    };
+    localStorage.setItem(KEY, JSON.stringify(init));
+    return init;
+  }
+  try{ return JSON.parse(raw); }
+  catch(e){
+    // fallback if corrupted
+    const init = { meta:{ createdAt:new Date().toISOString(), version:"1.0.0", clinicName:"عيادتي", corrupted:true }, patients:[], appointments:[], payments:[] };
+    localStorage.setItem(KEY, JSON.stringify(init));
+    return init;
+  }
+}
+function saveDB(db){ localStorage.setItem(KEY, JSON.stringify(db)); }
+function hasPass(){ return !!localStorage.getItem(PASS_KEY); }
+
+function setSession(ok){
+  localStorage.setItem(SESSION_KEY, ok ? "1":"0");
+}
+function isLoggedIn(){
+  return localStorage.getItem(SESSION_KEY)==="1";
+}
+
+/* =========================
+   CRYPTO: SHA-256
+========================= */
+async function sha256(text){
+  const enc = new TextEncoder().encode(text);
+  const hashBuf = await crypto.subtle.digest("SHA-256", enc);
+  const arr = Array.from(new Uint8Array(hashBuf));
+  return arr.map(b=>b.toString(16).padStart(2,"0")).join("");
+}
+
+/* =========================
+   STATE
+========================= */
+let db = loadDB();
+let currentTab = "dashboard";
+let selectedPatientId = null;
+
+function rebuildBadges(){
+  $("#badgePatients").textContent = db.patients.length;
+  $("#badgeAppts").textContent = db.appointments.length;
+  $("#badgePayments").textContent = db.payments.length;
+  $("#badgeDash").textContent = "✓";
+}
+
+function setStatus(text){
+  $("#subStatus").textContent = text;
+}
+
+function setTodayPill(){
+  const now = new Date();
+  const label = now.toLocaleDateString("ar-JO", {weekday:"long", year:"numeric", month:"long", day:"numeric"});
+  $("#todayPill").textContent = label;
+}
+
+/* =========================
+   NAV / TAB
+========================= */
+function switchTab(tab){
+  currentTab = tab;
+  $$(".nav button[data-tab]").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+  $$("#appView [id^='tab-']").forEach(el=>el.classList.add("hidden"));
+  $("#tab-"+tab).classList.remove("hidden");
+
+  const titles = {
+    dashboard:["لوحة التحكم","ملخص شامل + إجراءات سريعة"],
+    patients:["المرضى","إضافة/بحث/متابعة/جلسات"],
+    appointments:["المواعيد","حجز وإدارة المواعيد + فلترة"],
+    accounts:["الحسابات","دفعات + أرصدة + كشف حساب"],
+    settings:["إعدادات / نسخ احتياطي","تصدير/استيراد/مسح البيانات"]
+  };
+  $("#pageTitle").textContent = titles[tab]?.[0] || "—";
+  $("#pageSub").textContent = titles[tab]?.[1] || "—";
+
+  renderAll();
+}
+
+$$(".nav button[data-tab]").forEach(btn=>{
+  btn.addEventListener("click", ()=> switchTab(btn.dataset.tab));
+});
+
+/* =========================
+   MODAL
+========================= */
+function openModal({title, sub, bodyHTML, footHTML, onOpen}){
+  $("#modalTitle").textContent = title || "—";
+  $("#modalSub").textContent = sub || "";
+  $("#modalBody").innerHTML = bodyHTML || "";
+  $("#modalFoot").innerHTML = footHTML || "";
+  $("#overlay").classList.add("show");
+  if (typeof onOpen==="function") onOpen();
+}
+function closeModal(){
+  $("#overlay").classList.remove("show");
+  $("#modalBody").innerHTML = "";
+  $("#modalFoot").innerHTML = "";
+}
+$("#modalClose").addEventListener("click", closeModal);
+$("#overlay").addEventListener("click", (e)=>{
+  if(e.target.id==="overlay") closeModal();
+});
+document.addEventListener("keydown", (e)=>{
+  if(e.key==="Escape") closeModal();
+});
+
+/* =========================
+   DOMAIN: PATIENTS
+========================= */
+function patientById(id){ return db.patients.find(p=>p.id===id) || null; }
+function patientName(id){ return patientById(id)?.name || "—"; }
+
+function calcPatientStats(pid){
+  const p = patientById(pid);
+  if(!p) return {sessions:0, pricePerSession:0, billed:0, paid:0, due:0};
+
+  const sessions = Number(p.sessionsCount||0);
+  const price = Number(p.pricePerSession||0);
+  const billed = sessions * price;
+
+  const paid = db.payments
+    .filter(x=>x.patientId===pid)
+    .reduce((a,b)=>a+Number(b.amount||0), 0);
+
+  const due = billed - paid;
+  return {sessions, pricePerSession:price, billed, paid, due};
+}
+
+function upsertPatient(patient){
+  const i = db.patients.findIndex(x=>x.id===patient.id);
+  if(i>=0) db.patients[i] = patient;
+  else db.patients.unshift(patient);
+  saveDB(db);
+}
+
+function deletePatient(pid){
+  // Also remove related appointments/payments? We'll keep them but mark patient missing? Better: remove related too (clean).
+  db.patients = db.patients.filter(p=>p.id!==pid);
+  db.appointments = db.appointments.filter(a=>a.patientId!==pid);
+  db.payments = db.payments.filter(p=>p.patientId!==pid);
+  saveDB(db);
+}
+
+function addFollowUp(pid, note){
+  const p = patientById(pid);
+  if(!p) return;
+  p.followUps = Array.isArray(p.followUps) ? p.followUps : [];
+  p.followUps.unshift({ id: uid(), at: new Date().toISOString(), note: String(note||"").trim() });
+  upsertPatient(p);
+}
+
+function incSession(pid, note){
+  const p = patientById(pid);
+  if(!p) return;
+  p.sessionsCount = Number(p.sessionsCount||0) + 1;
+  p.followUps = Array.isArray(p.followUps) ? p.followUps : [];
+  p.followUps.unshift({ id: uid(), at: new Date().toISOString(), note: note ? ("جلسة: " + String(note)) : "جلسة مسجلة" });
+  upsertPatient(p);
+}
+
+function patientCardHTML(p){
+  const st = calcPatientStats(p.id);
+  const phone = p.phone ? `📞 ${escapeHtml(p.phone)}` : "📞 —";
+  const fileNo = p.fileNo ? `🗂️ ${escapeHtml(p.fileNo)}` : "🗂️ —";
+  const sess = `🧠 جلسات: ${st.sessions}`;
+  const duePill = st.due>0 ? `<span class="pill warn">مستحق ${fmtMoney(st.due)}</span>` : (st.due<0 ? `<span class="pill info">رصيد ${fmtMoney(Math.abs(st.due))}</span>` : `<span class="pill ok">مصفّى</span>`);
+  return `
+    <div class="item">
+      <div class="meta">
+        <b title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</b>
+        <div class="sub">
+          <span>${fileNo}</span>
+          <span>${phone}</span>
+          <span>${sess}</span>
+        </div>
+        <div class="sub">
+          <span class="muted2">السعر/جلسة: ${fmtMoney(p.pricePerSession||0)}</span>
+          <span>${duePill}</span>
+        </div>
+      </div>
+      <div class="ops">
+        <button class="btn" data-act="view" data-id="${p.id}">👁️ عرض</button>
+        <button class="btn ok" data-act="session" data-id="${p.id}">+ جلسة</button>
+        <button class="btn" data-act="edit" data-id="${p.id}">✏️ تعديل</button>
+        <button class="btn danger" data-act="del" data-id="${p.id}">🗑️</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderPatients(){
+  const q = ($("#patientSearch").value||"").trim().toLowerCase();
+  const list = db.patients
+    .filter(p=>{
+      if(!q) return true;
+      const hay = [p.name,p.phone,p.fileNo,p.notes].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+
+  $("#patientsList").innerHTML = list.map(patientCardHTML).join("");
+  $("#patientsEmpty").classList.toggle("hidden", list.length>0);
+
+  // bind ops
+  $$("#patientsList [data-act]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const id = btn.dataset.id;
+      const act = btn.dataset.act;
+      if(act==="view") openPatientProfile(id);
+      if(act==="edit") openPatientForm(patientById(id));
+      if(act==="session") openQuickSession(id);
+      if(act==="del") confirmDanger("حذف المريض؟", "سيتم حذف المريض وكل مواعيده ودفعاته.", ()=>{
+        deletePatient(id);
+        db = loadDB();
+        renderAll();
+        toast("تم الحذف");
+      });
+    });
+  });
+}
+
+function openPatientForm(existing=null){
+  const isEdit = !!existing;
+  const p = existing || {
+    id: uid(),
+    name:"",
+    phone:"",
+    fileNo:"",
+    gender:"",
+    birthYear:"",
+    address:"",
+    notes:"",
+    pricePerSession: 0,
+    sessionsCount: 0,
+    followUps:[]
+  };
+
+  openModal({
+    title: isEdit ? "تعديل بيانات مريض" : "إضافة مريض جديد",
+    sub: "الأرشيف + السعر/جلسة + معلومات أساسية",
+    bodyHTML: `
+      <div class="stack">
+        <div class="row">
+          <div>
+            <label class="muted">الاسم الكامل *</label>
+            <input id="pf_name" value="${escapeHtml(p.name)}" placeholder="مثال: أحمد محمد" />
+          </div>
+          <div>
+            <label class="muted">رقم الهاتف</label>
+            <input id="pf_phone" value="${escapeHtml(p.phone)}" placeholder="07xxxxxxxx" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="muted">رقم الملف</label>
+            <input id="pf_file" value="${escapeHtml(p.fileNo)}" placeholder="اختياري" />
+          </div>
+          <div>
+            <label class="muted">الجنس</label>
+            <select id="pf_gender">
+              <option value="" ${p.gender===""?"selected":""}>—</option>
+              <option value="male" ${p.gender==="male"?"selected":""}>ذكر</option>
+              <option value="female" ${p.gender==="female"?"selected":""}>أنثى</option>
+            </select>
+          </div>
+          <div>
+            <label class="muted">سنة الميلاد</label>
+            <input id="pf_birth" inputmode="numeric" value="${escapeHtml(p.birthYear)}" placeholder="مثال: 1994" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="muted">السعر لكل جلسة (د.أ)</label>
+            <input id="pf_price" inputmode="decimal" value="${escapeHtml(p.pricePerSession)}" placeholder="مثال: 20" />
+          </div>
+          <div>
+            <label class="muted">عدد الجلسات الحالية</label>
+            <input id="pf_sessions" inputmode="numeric" value="${escapeHtml(p.sessionsCount)}" placeholder="0" />
+          </div>
+        </div>
+
+        <div>
+          <label class="muted">العنوان</label>
+          <input id="pf_address" value="${escapeHtml(p.address)}" placeholder="اختياري" />
+        </div>
+
+        <div>
+          <label class="muted">ملاحظات عامة</label>
+          <textarea id="pf_notes" placeholder="تشخيص/حساسية/ملاحظات…">${escapeHtml(p.notes)}</textarea>
+        </div>
+
+        <div class="hint">
+          <b>معلومة:</b> يمكنك إضافة المتابعة والجلسات من صفحة “عرض” للمريض.
+        </div>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn primary" id="pf_save">${isEdit?"حفظ التعديل":"إضافة"}</button>
+      <button class="btn" id="pf_cancel">إلغاء</button>
+    `,
+    onOpen: ()=>{
+      $("#pf_cancel").addEventListener("click", closeModal);
+      $("#pf_save").addEventListener("click", ()=>{
+        const name = ($("#pf_name").value||"").trim();
+        if(!name){
+          toast("الاسم مطلوب", "warn");
+          $("#pf_name").focus();
+          return;
+        }
+        p.name = name;
+        p.phone = ($("#pf_phone").value||"").trim();
+        p.fileNo = ($("#pf_file").value||"").trim();
+        p.gender = $("#pf_gender").value||"";
+        p.birthYear = ($("#pf_birth").value||"").trim();
+        p.address = ($("#pf_address").value||"").trim();
+        p.notes = ($("#pf_notes").value||"").trim();
+        p.pricePerSession = Number(($("#pf_price").value||"0").replace(",",".")) || 0;
+        p.sessionsCount = Number($("#pf_sessions").value||"0") || 0;
+        p.followUps = Array.isArray(p.followUps) ? p.followUps : [];
+
+        upsertPatient(p);
+        db = loadDB();
+        closeModal();
+        renderAll();
+        toast(isEdit ? "تم التعديل" : "تمت الإضافة", "ok");
+      });
+    }
+  });
+}
+
+function openQuickSession(pid){
+  const p = patientById(pid);
+  if(!p) return;
+  openModal({
+    title: `تسجيل جلسة — ${p.name}`,
+    sub: "يزيد عدد الجلسات + يضيف المتابعة تلقائياً",
+    bodyHTML: `
+      <div class="stack">
+        <div class="hint">
+          الجلسات الحالية: <b>${Number(p.sessionsCount||0)}</b>
+          <div class="hr"></div>
+          السعر/جلسة: <b>${fmtMoney(p.pricePerSession||0)}</b>
+        </div>
+        <div>
+          <label class="muted">ملاحظة (اختياري)</label>
+          <textarea id="qs_note" placeholder="مثال: جلسة علاج طبيعي / متابعة…"></textarea>
+        </div>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn ok" id="qs_add">+ تسجيل</button>
+      <button class="btn" id="qs_cancel">إلغاء</button>
+    `,
+    onOpen: ()=>{
+      $("#qs_cancel").addEventListener("click", closeModal);
+      $("#qs_add").addEventListener("click", ()=>{
+        const note = ($("#qs_note").value||"").trim();
+        incSession(pid, note);
+        db = loadDB();
+        closeModal();
+        renderAll();
+        toast("تم تسجيل الجلسة", "ok");
+      });
+    }
+  });
+}
+
+function openPatientProfile(pid){
+  const p = patientById(pid);
+  if(!p) return;
+  selectedPatientId = pid;
+
+  const st = calcPatientStats(pid);
+
+  const follow = (Array.isArray(p.followUps)? p.followUps : []).slice(0, 30).map(f=>{
+    return `
+      <div class="item">
+        <div class="meta">
+          <b>${fmtDate(f.at)} — ${fmtTime(f.at)}</b>
+          <div class="sub"><span>${escapeHtml(f.note || "—")}</span></div>
+        </div>
+        <div class="ops">
+          <span class="pill info">${new Date(f.at).toISOString().slice(0,10)}</span>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  const patientAppts = db.appointments
+    .filter(a=>a.patientId===pid)
+    .sort((a,b)=> new Date(b.at)-new Date(a.at))
+    .slice(0, 12)
+    .map(a=>{
+      const pill = a.status==="done" ? `<span class="pill ok">تم</span>` :
+                   a.status==="cancelled" ? `<span class="pill danger">ملغى</span>` :
+                   `<span class="pill info">مجدول</span>`;
+      return `
+        <div class="item">
+          <div class="meta">
+            <b>${fmtDate(a.at)} — ${fmtTime(a.at)}</b>
+            <div class="sub">
+              <span>${pill}</span>
+              <span class="muted2">${escapeHtml(a.note||"")}</span>
+            </div>
+          </div>
+          <div class="ops">
+            <button class="btn" data-appt-edit="${a.id}">✏️</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  const patientPays = db.payments
+    .filter(x=>x.patientId===pid)
+    .sort((a,b)=> new Date(b.at)-new Date(a.at))
+    .slice(0, 12)
+    .map(x=>{
+      return `
+        <div class="item">
+          <div class="meta">
+            <b>${fmtMoney(x.amount)} — ${fmtDate(x.at)}</b>
+            <div class="sub">
+              <span class="pill info">${escapeHtml(x.method||"—")}</span>
+              <span class="muted2">${escapeHtml(x.note||"")}</span>
+            </div>
+          </div>
+          <div class="ops">
+            <button class="btn" data-pay-edit="${x.id}">✏️</button>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+  openModal({
+    title: `ملف المريض — ${p.name}`,
+    sub: `رقم الملف: ${p.fileNo||"—"} | الهاتف: ${p.phone||"—"}`,
+    bodyHTML: `
+      <div class="stack">
+        <div class="kpi">
+          <div class="box">
+            <b>الجلسات</b>
+            <div class="n">${st.sessions}</div>
+            <div class="h">سجل الجلسات</div>
+          </div>
+          <div class="box">
+            <b>إجمالي محسوب</b>
+            <div class="n">${fmtMoney(st.billed)}</div>
+            <div class="h">جلسات × سعر</div>
+          </div>
+          <div class="box">
+            <b>مدفوع</b>
+            <div class="n">${fmtMoney(st.paid)}</div>
+            <div class="h">حسب الدفعات</div>
+          </div>
+          <div class="box">
+            <b>المتبقي</b>
+            <div class="n">${fmtMoney(st.due)}</div>
+            <div class="h">مستحق/رصيد</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <div class="hint">
+              <b>معلومات</b>
+              <div class="hr"></div>
+              <div class="muted">العنوان:</div>
+              <div>${escapeHtml(p.address||"—")}</div>
+              <div class="hr"></div>
+              <div class="muted">ملاحظات عامة:</div>
+              <div>${escapeHtml(p.notes||"—")}</div>
+            </div>
+          </div>
+
+          <div class="stack">
+            <div class="row tight">
+              <button class="btn ok" id="pp_addSession">+ جلسة</button>
+              <button class="btn primary" id="pp_addFollow">+ متابعة</button>
+              <button class="btn" id="pp_addAppt">+ موعد</button>
+              <button class="btn" id="pp_addPay">+ دفعة</button>
+            </div>
+
+            <div class="row tight">
+              <button class="btn" id="pp_print">🖨️ طباعة</button>
+              <button class="btn danger" id="pp_delete">🗑️ حذف المريض</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="box-shadow:none; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)">
+          <div class="head">
+            <div class="title"><b>سجل المتابعة</b><span>آخر 30 سجل</span></div>
+            <div class="pill info">${(p.followUps||[]).length}</div>
+          </div>
+          <div class="body">
+            <div class="list">${follow || ""}</div>
+            ${follow ? "" : `<div class="hint">لا يوجد متابعة بعد.</div>`}
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="card" style="box-shadow:none; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)">
+            <div class="head">
+              <div class="title"><b>المواعيد</b><span>آخر 12</span></div>
+              <div class="pill info">${db.appointments.filter(a=>a.patientId===pid).length}</div>
+            </div>
+            <div class="body">
+              <div class="list">${patientAppts || ""}</div>
+              ${patientAppts ? "" : `<div class="hint">لا يوجد مواعيد لهذا المريض.</div>`}
+            </div>
+          </div>
+
+          <div class="card" style="box-shadow:none; border-radius:16px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.02)">
+            <div class="head">
+              <div class="title"><b>الدفعات</b><span>آخر 12</span></div>
+              <div class="pill info">${db.payments.filter(x=>x.patientId===pid).length}</div>
+            </div>
+            <div class="body">
+              <div class="list">${patientPays || ""}</div>
+              ${patientPays ? "" : `<div class="hint">لا يوجد دفعات لهذا المريض.</div>`}
+            </div>
+          </div>
+        </div>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn" id="pp_close">إغلاق</button>
+      <button class="btn" id="pp_edit">✏️ تعديل بيانات</button>
+    `,
+    onOpen: ()=>{
+      $("#pp_close").addEventListener("click", closeModal);
+      $("#pp_edit").addEventListener("click", ()=> { closeModal(); openPatientForm(patientById(pid)); });
+      $("#pp_addSession").addEventListener("click", ()=> { closeModal(); openQuickSession(pid); });
+
+      $("#pp_addFollow").addEventListener("click", ()=>{
+        const p2 = patientById(pid);
+        if(!p2) return;
+        openModal({
+          title:`إضافة متابعة — ${p2.name}`,
+          sub:"تُضاف في سجل المتابعة بتاريخ/وقت الآن",
+          bodyHTML: `
+            <div class="stack">
+              <div>
+                <label class="muted">نص المتابعة *</label>
+                <textarea id="fu_note" placeholder="مثال: تحسن ملحوظ… / تعديل خطة…"></textarea>
+              </div>
+            </div>
+          `,
+          footHTML: `
+            <button class="btn primary" id="fu_save">حفظ</button>
+            <button class="btn" id="fu_cancel">إلغاء</button>
+          `,
+          onOpen: ()=>{
+            $("#fu_cancel").addEventListener("click", closeModal);
+            $("#fu_save").addEventListener("click", ()=>{
+              const note = ($("#fu_note").value||"").trim();
+              if(!note){ toast("اكتب المتابعة", "warn"); return; }
+              addFollowUp(pid, note);
+              db = loadDB();
+              closeModal();
+              openPatientProfile(pid);
+              toast("تمت الإضافة", "ok");
+            });
+          }
+        });
+      });
+
+      $("#pp_addAppt").addEventListener("click", ()=> { closeModal(); openApptForm({patientId: pid}); });
+      $("#pp_addPay").addEventListener("click", ()=> { closeModal(); openPaymentForm({patientId: pid}); });
+
+      $("#pp_print").addEventListener("click", ()=> window.print());
+
+      $("#pp_delete").addEventListener("click", ()=>{
+        confirmDanger("حذف المريض؟", "سيتم حذف المريض وكل مواعيده ودفعاته.", ()=>{
+          deletePatient(pid);
+          db = loadDB();
+          closeModal();
+          renderAll();
+          toast("تم الحذف", "ok");
+        });
+      });
+
+      // inline edit buttons
+      $$("[data-appt-edit]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const id = b.getAttribute("data-appt-edit");
+          const ap = db.appointments.find(x=>x.id===id);
+          if(ap){ closeModal(); openApptForm(ap); }
+        });
+      });
+      $$("[data-pay-edit]").forEach(b=>{
+        b.addEventListener("click", ()=>{
+          const id = b.getAttribute("data-pay-edit");
+          const pay = db.payments.find(x=>x.id===id);
+          if(pay){ closeModal(); openPaymentForm(pay); }
+        });
+      });
+    }
+  });
+}
+
+/* =========================
+   DOMAIN: APPOINTMENTS
+========================= */
+function apptPill(status){
+  if(status==="done") return `<span class="pill ok">تم</span>`;
+  if(status==="cancelled") return `<span class="pill danger">ملغى</span>`;
+  return `<span class="pill info">مجدول</span>`;
+}
+
+function openApptForm(existingOrPrefill=null){
+  const isEdit = existingOrPrefill && existingOrPrefill.id;
+  const ap = isEdit ? {...existingOrPrefill} : {
+    id: uid(),
+    patientId: existingOrPrefill?.patientId || "",
+    at: new Date().toISOString().slice(0,16), // datetime-local
+    status: "scheduled",
+    note: ""
+  };
+
+  const patientOptions = db.patients
+    .slice()
+    .sort((a,b)=> a.name.localeCompare(b.name, "ar"))
+    .map(p=>`<option value="${p.id}" ${p.id===ap.patientId?"selected":""}>${escapeHtml(p.name)} — ${escapeHtml(p.phone||"")}</option>`)
+    .join("");
+
+  openModal({
+    title: isEdit ? "تعديل موعد" : "حجز موعد",
+    sub: "اختر المريض + التاريخ/الوقت + الحالة",
+    bodyHTML: `
+      <div class="stack">
+        <div>
+          <label class="muted">المريض *</label>
+          <select id="af_patient">
+            <option value="">— اختر مريض —</option>
+            ${patientOptions}
+          </select>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="muted">التاريخ/الوقت *</label>
+            <input id="af_at" type="datetime-local" value="${escapeHtml(ap.at)}" />
+          </div>
+          <div>
+            <label class="muted">الحالة</label>
+            <select id="af_status">
+              <option value="scheduled" ${ap.status==="scheduled"?"selected":""}>مجدول</option>
+              <option value="done" ${ap.status==="done"?"selected":""}>تم</option>
+              <option value="cancelled" ${ap.status==="cancelled"?"selected":""}>ملغى</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="muted">ملاحظة</label>
+          <textarea id="af_note" placeholder="مثال: متابعة بعد أسبوع…">${escapeHtml(ap.note)}</textarea>
+        </div>
+
+        <div class="hint">
+          <b>تلميح:</b> عند تحويل الحالة إلى “تم”، يمكنك أيضاً تسجيل جلسة من ملف المريض.
+        </div>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn primary" id="af_save">${isEdit?"حفظ":"حجز"}</button>
+      ${isEdit? `<button class="btn danger" id="af_del">حذف</button>` : ``}
+      <button class="btn" id="af_cancel">إلغاء</button>
+    `,
+    onOpen: ()=>{
+      $("#af_cancel").addEventListener("click", closeModal);
+
+      if(isEdit){
+        $("#af_del").addEventListener("click", ()=>{
+          confirmDanger("حذف الموعد؟", "سيتم حذف هذا الموعد نهائياً.", ()=>{
+            db.appointments = db.appointments.filter(x=>x.id!==ap.id);
+            saveDB(db);
+            db = loadDB();
+            closeModal();
+            renderAll();
+            toast("تم حذف الموعد", "ok");
+          });
+        });
+      }
+
+      $("#af_save").addEventListener("click", ()=>{
+        const pid = $("#af_patient").value;
+        const at = $("#af_at").value;
+        if(!pid){ toast("اختر مريض", "warn"); return; }
+        if(!at){ toast("اختر تاريخ/وقت", "warn"); return; }
+
+        ap.patientId = pid;
+        ap.at = at;
+        ap.status = $("#af_status").value || "scheduled";
+        ap.note = ($("#af_note").value||"").trim();
+
+        const idx = db.appointments.findIndex(x=>x.id===ap.id);
+        if(idx>=0) db.appointments[idx] = ap;
+        else db.appointments.unshift(ap);
+
+        saveDB(db);
+        db = loadDB();
+        closeModal();
+        renderAll();
+        toast(isEdit?"تم التعديل":"تم حجز الموعد", "ok");
+      });
+    }
+  });
+}
+
+function renderAppointments(){
+  const q = ($("#apptSearch").value||"").trim().toLowerCase();
+  const from = $("#apptFrom").value || "";
+  const to = $("#apptTo").value || "";
+  const status = $("#apptStatusFilter").value || "";
+
+  let list = db.appointments.slice();
+
+  if(from){
+    const f = new Date(from+"T00:00");
+    list = list.filter(a => new Date(a.at) >= f);
+  }
+  if(to){
+    const t = new Date(to+"T23:59");
+    list = list.filter(a => new Date(a.at) <= t);
+  }
+  if(status){
+    list = list.filter(a => a.status===status);
+  }
+  if(q){
+    list = list.filter(a=>{
+      const pName = patientName(a.patientId).toLowerCase();
+      const hay = [pName, a.note, a.status].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  list.sort((a,b)=> new Date(a.at)-new Date(b.at));
+
+  $("#apptsList").innerHTML = list.map(a=>{
+    const p = patientById(a.patientId);
+    const pill = apptPill(a.status);
+    return `
+      <div class="item">
+        <div class="meta">
+          <b>${fmtDate(a.at)} — ${fmtTime(a.at)}</b>
+          <div class="sub">
+            <span class="pill info">${escapeHtml(p?.name || "مريض محذوف")}</span>
+            <span>${pill}</span>
+            <span class="muted2">${escapeHtml(a.note||"")}</span>
+          </div>
+        </div>
+        <div class="ops">
+          <button class="btn" data-appt-open="${a.id}">✏️ إدارة</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  $("#apptsEmpty").classList.toggle("hidden", list.length>0);
+
+  $$("[data-appt-open]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const id = b.getAttribute("data-appt-open");
+      const ap = db.appointments.find(x=>x.id===id);
+      if(ap) openApptForm(ap);
+    });
+  });
+}
+
+/* =========================
+   DOMAIN: PAYMENTS
+========================= */
+function openPaymentForm(existingOrPrefill=null){
+  const isEdit = existingOrPrefill && existingOrPrefill.id;
+  const pay = isEdit ? {...existingOrPrefill} : {
+    id: uid(),
+    patientId: existingOrPrefill?.patientId || "",
+    at: new Date().toISOString().slice(0,10),
+    amount: 0,
+    method: "cash",
+    note: ""
+  };
+
+  const patientOptions = db.patients
+    .slice()
+    .sort((a,b)=> a.name.localeCompare(b.name, "ar"))
+    .map(p=>`<option value="${p.id}" ${p.id===pay.patientId?"selected":""}>${escapeHtml(p.name)} — ${escapeHtml(p.phone||"")}</option>`)
+    .join("");
+
+  openModal({
+    title: isEdit ? "تعديل دفعة" : "إضافة دفعة",
+    sub: "اختر المريض + مبلغ + تاريخ + طريقة",
+    bodyHTML: `
+      <div class="stack">
+        <div>
+          <label class="muted">المريض *</label>
+          <select id="pf_patient">
+            <option value="">— اختر مريض —</option>
+            ${patientOptions}
+          </select>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="muted">المبلغ (د.أ) *</label>
+            <input id="pf_amount" inputmode="decimal" value="${escapeHtml(pay.amount)}" placeholder="مثال: 20" />
+          </div>
+          <div>
+            <label class="muted">التاريخ</label>
+            <input id="pf_at" type="date" value="${escapeHtml(pay.at)}" />
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label class="muted">طريقة الدفع</label>
+            <select id="pf_method">
+              <option value="cash" ${pay.method==="cash"?"selected":""}>كاش</option>
+              <option value="visa" ${pay.method==="visa"?"selected":""}>Visa</option>
+              <option value="bank" ${pay.method==="bank"?"selected":""}>تحويل بنكي</option>
+              <option value="other" ${pay.method==="other"?"selected":""}>أخرى</option>
+            </select>
+          </div>
+          <div>
+            <label class="muted">ملاحظة</label>
+            <input id="pf_note" value="${escapeHtml(pay.note)}" placeholder="اختياري" />
+          </div>
+        </div>
+
+        <div class="hint">
+          سيتم حساب الرصيد (مستحق/رصيد) تلقائياً من (جلسات×سعر) ناقص الدفعات.
+        </div>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn primary" id="pf_save2">${isEdit?"حفظ":"إضافة"}</button>
+      ${isEdit? `<button class="btn danger" id="pf_del2">حذف</button>` : ``}
+      <button class="btn" id="pf_cancel2">إلغاء</button>
+    `,
+    onOpen: ()=>{
+      $("#pf_cancel2").addEventListener("click", closeModal);
+
+      if(isEdit){
+        $("#pf_del2").addEventListener("click", ()=>{
+          confirmDanger("حذف الدفعة؟", "سيتم حذف الدفعة نهائياً.", ()=>{
+            db.payments = db.payments.filter(x=>x.id!==pay.id);
+            saveDB(db);
+            db = loadDB();
+            closeModal();
+            renderAll();
+            toast("تم حذف الدفعة", "ok");
+          });
+        });
+      }
+
+      $("#pf_save2").addEventListener("click", ()=>{
+        const pid = $("#pf_patient").value;
+        const amount = Number(($("#pf_amount").value||"0").replace(",",".")) || 0;
+        if(!pid){ toast("اختر مريض", "warn"); return; }
+        if(amount<=0){ toast("أدخل مبلغ صحيح", "warn"); return; }
+
+        pay.patientId = pid;
+        pay.amount = amount;
+        pay.at = $("#pf_at").value || todayISO();
+        pay.method = $("#pf_method").value || "cash";
+        pay.note = ($("#pf_note").value||"").trim();
+
+        const idx = db.payments.findIndex(x=>x.id===pay.id);
+        if(idx>=0) db.payments[idx] = pay;
+        else db.payments.unshift(pay);
+
+        saveDB(db);
+        db = loadDB();
+        closeModal();
+        renderAll();
+        toast(isEdit?"تم التعديل":"تمت إضافة الدفعة", "ok");
+      });
+    }
+  });
+}
+
+function renderPayments(){
+  const q = ($("#paySearch").value||"").trim().toLowerCase();
+  let list = db.payments.slice();
+
+  if(q){
+    list = list.filter(x=>{
+      const pName = patientName(x.patientId).toLowerCase();
+      const hay = [pName, x.method, x.note].join(" ").toLowerCase();
+      return hay.includes(q);
+    });
+  }
+
+  list.sort((a,b)=> new Date(b.at)-new Date(a.at));
+
+  $("#paymentsList").innerHTML = list.map(x=>{
+    const p = patientById(x.patientId);
+    const method = x.method==="cash" ? "كاش" :
+                   x.method==="visa" ? "Visa" :
+                   x.method==="bank" ? "تحويل" : "أخرى";
+    return `
+      <div class="item">
+        <div class="meta">
+          <b>${fmtMoney(x.amount)} — ${fmtDate(x.at)}</b>
+          <div class="sub">
+            <span class="pill info">${escapeHtml(p?.name || "مريض محذوف")}</span>
+            <span class="pill">${method}</span>
+            <span class="muted2">${escapeHtml(x.note||"")}</span>
+          </div>
+        </div>
+        <div class="ops">
+          <button class="btn" data-pay-open="${x.id}">✏️ إدارة</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  $("#paymentsEmpty").classList.toggle("hidden", list.length>0);
+
+  $$("[data-pay-open]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const id = b.getAttribute("data-pay-open");
+      const pay = db.payments.find(x=>x.id===id);
+      if(pay) openPaymentForm(pay);
+    });
+  });
+}
+
+/* =========================
+   DASHBOARD
+========================= */
+function renderDashboard(){
+  // KPIs
+  $("#kpiPatients").textContent = db.patients.length;
+
+  const today = todayISO();
+  const todayAppts = db.appointments.filter(a=> String(a.at).slice(0,10)===today && a.status!=="cancelled");
+  $("#kpiTodayAppts").textContent = todayAppts.length;
+
+  const mk = monthKey();
+  const monthPayments = db.payments
+    .filter(x=> String(x.at).slice(0,7)===mk)
+    .reduce((a,b)=>a+Number(b.amount||0),0);
+  $("#kpiMonthPayments").textContent = fmtMoney(monthPayments);
+
+  // due = sum(billed - paid) across patients
+  let dueSum = 0;
+  for(const p of db.patients){
+    const st = calcPatientStats(p.id);
+    dueSum += st.due;
+  }
+  $("#kpiDue").textContent = fmtMoney(dueSum);
+
+  // upcoming 7 days
+  const now = new Date();
+  const limit = new Date(now.getTime() + 7*24*60*60*1000);
+  const upcoming = db.appointments
+    .filter(a=>{
+      const dt = new Date(a.at);
+      return dt>=now && dt<=limit && a.status!=="cancelled";
+    })
+    .sort((a,b)=> new Date(a.at)-new Date(b.at))
+    .slice(0, 8);
+
+  $("#dashUpcoming").innerHTML = upcoming.map(a=>{
+    const p = patientById(a.patientId);
+    return `
+      <div class="item">
+        <div class="meta">
+          <b>${fmtDate(a.at)} — ${fmtTime(a.at)}</b>
+          <div class="sub">
+            <span class="pill info">${escapeHtml(p?.name || "مريض محذوف")}</span>
+            ${apptPill(a.status)}
+            <span class="muted2">${escapeHtml(a.note||"")}</span>
+          </div>
+        </div>
+        <div class="ops">
+          <button class="btn" data-appt-open="${a.id}">✏️</button>
+        </div>
+      </div>
+    `;
+  }).join("");
+  $("#dashUpcomingEmpty").classList.toggle("hidden", upcoming.length>0);
+  $("#nextCountPill").textContent = upcoming.length;
+
+  $$("[data-appt-open]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const id = b.getAttribute("data-appt-open");
+      const ap = db.appointments.find(x=>x.id===id);
+      if(ap) openApptForm(ap);
+    });
+  });
+
+  // alerts: due patients, today appointments, missing prices
+  const alerts = [];
+
+  const duePatients = db.patients
+    .map(p=>({p, st: calcPatientStats(p.id)}))
+    .filter(x=> x.st.due>0)
+    .sort((a,b)=> b.st.due-a.st.due)
+    .slice(0, 6);
+
+  if(duePatients.length){
+    for(const x of duePatients){
+      alerts.push({
+        title:`مستحق على ${x.p.name}`,
+        desc:`المتبقي: ${fmtMoney(x.st.due)} | جلسات: ${x.st.sessions} | السعر/جلسة: ${fmtMoney(x.p.pricePerSession||0)}`,
+        type:"warn",
+        action: ()=> openPatientProfile(x.p.id)
+      });
+    }
+  }
+
+  const noPrice = db.patients.filter(p=> Number(p.pricePerSession||0)<=0 && Number(p.sessionsCount||0)>0).slice(0, 4);
+  for(const p of noPrice){
+    alerts.push({
+      title:`سعر جلسة غير محدد`,
+      desc:`${p.name} لديه جلسات مسجلة لكن السعر/جلسة = 0`,
+      type:"danger",
+      action: ()=> openPatientProfile(p.id)
+    });
+  }
+
+  if(todayAppts.length){
+    alerts.unshift({
+      title:`مواعيد اليوم`,
+      desc:`عدد مواعيد اليوم: ${todayAppts.length}. افتح تبويب المواعيد للمتابعة.`,
+      type:"info",
+      action: ()=> switchTab("appointments")
+    });
+  }
+
+  const viewAlerts = alerts.slice(0, 8);
+  $("#dashAlerts").innerHTML = viewAlerts.map((a,i)=>`
+    <div class="item">
+      <div class="meta">
+        <b>${escapeHtml(a.title)}</b>
+        <div class="sub">
+          <span class="pill ${a.type}">${a.type==="warn"?"تنبيه":a.type==="danger"?"مشكلة":a.type==="info"?"معلومة":"—"}</span>
+          <span class="muted2">${escapeHtml(a.desc)}</span>
+        </div>
+      </div>
+      <div class="ops">
+        <button class="btn" data-alert="${i}">فتح</button>
+      </div>
+    </div>
+  `).join("");
+  $("#dashAlertsEmpty").classList.toggle("hidden", viewAlerts.length>0);
+
+  $$("[data-alert]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const idx = Number(b.getAttribute("data-alert"));
+      viewAlerts[idx]?.action?.();
+    });
+  });
+}
+
+/* =========================
+   SETTINGS / BACKUP
+========================= */
+function updateStorageInfo(){
+  const raw = localStorage.getItem(KEY) || "";
+  const bytes = new Blob([raw]).size;
+  const kb = (bytes/1024).toFixed(1);
+  $("#storageInfo").textContent =
+    `DB bytes: ${bytes} (${kb} KB)\n` +
+    `patients: ${db.patients.length}\n` +
+    `appointments: ${db.appointments.length}\n` +
+    `payments: ${db.payments.length}\n` +
+    `createdAt: ${db.meta?.createdAt || "—"}\n` +
+    `version: ${db.meta?.version || "—"}`;
+}
+
+$("#exportBtn").addEventListener("click", ()=>{
+  const payload = loadDB();
+  const blob = new Blob([JSON.stringify(payload,null,2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `clinic_backup_${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  toast("تم تصدير النسخة", "ok");
+});
+
+$("#importBtn").addEventListener("click", ()=> $("#importFile").click());
+$("#importFile").addEventListener("change", async (e)=>{
+  const f = e.target.files?.[0];
+  if(!f) return;
+  try{
+    const txt = await f.text();
+    const obj = JSON.parse(txt);
+    if(!obj || !obj.patients || !obj.appointments || !obj.payments) throw new Error("Invalid schema");
+    confirmDanger("استيراد نسخة احتياطية؟", "سيتم استبدال البيانات الحالية بالكامل.", ()=>{
+      localStorage.setItem(KEY, JSON.stringify(obj));
+      db = loadDB();
+      renderAll();
+      toast("تم الاستيراد", "ok");
+    });
+  }catch(err){
+    toast("ملف غير صالح", "danger");
+  }finally{
+    e.target.value = "";
+  }
+});
+
+$("#wipeDataBtn").addEventListener("click", ()=>{
+  confirmDanger("مسح بيانات العيادة؟", "سيتم حذف المرضى والمواعيد والدفعات فقط.", ()=>{
+    const keep = { meta:{...db.meta, wipedAt:new Date().toISOString()}, patients:[], appointments:[], payments:[] };
+    localStorage.setItem(KEY, JSON.stringify(keep));
+    db = loadDB();
+    renderAll();
+    toast("تم مسح بيانات العيادة", "ok");
+  });
+});
+
+$("#wipeAllBtn").addEventListener("click", ()=>{
+  confirmDanger("مسح شامل؟", "سيتم حذف البيانات + كلمة المرور. ستعود لشاشة الإعداد الأولى.", ()=>{
+    localStorage.removeItem(KEY);
+    localStorage.removeItem(PASS_KEY);
+    localStorage.removeItem(SESSION_KEY);
+    db = loadDB();
+    setSession(false);
+    boot();
+    toast("تم المسح الشامل", "ok");
+  });
+});
+
+$("#changePassBtn").addEventListener("click", async ()=>{
+  const np = ($("#newPass").value||"").trim();
+  if(np.length<4){ toast("كلمة المرور قصيرة (4 أحرف+)", "warn"); return; }
+  const h = await sha256(np);
+  localStorage.setItem(PASS_KEY, h);
+  $("#newPass").value = "";
+  toast("تم تغيير كلمة المرور", "ok");
+});
+
+/* =========================
+   QUICK ACTIONS
+========================= */
+$("#quickAddPatient").addEventListener("click", ()=> openPatientForm(null));
+$("#quickAddAppt").addEventListener("click", ()=> openApptForm(null));
+$("#quickAddPayment").addEventListener("click", ()=> openPaymentForm(null));
+
+$("#addPatientBtn").addEventListener("click", ()=> openPatientForm(null));
+$("#addApptBtn").addEventListener("click", ()=> openApptForm(null));
+$("#addPaymentBtn").addEventListener("click", ()=> openPaymentForm(null));
+
+$("#patientSearch").addEventListener("input", renderPatients);
+$("#apptSearch").addEventListener("input", renderAppointments);
+$("#apptFrom").addEventListener("change", renderAppointments);
+$("#apptTo").addEventListener("change", renderAppointments);
+$("#apptStatusFilter").addEventListener("change", renderAppointments);
+$("#clearApptFilters").addEventListener("click", ()=>{
+  $("#apptSearch").value="";
+  $("#apptFrom").value="";
+  $("#apptTo").value="";
+  $("#apptStatusFilter").value="";
+  renderAppointments();
+});
+$("#paySearch").addEventListener("input", renderPayments);
+
+/* =========================
+   TOAST
+========================= */
+let toastEl = null;
+function toast(msg, type="info"){
+  if(!toastEl){
+    toastEl = document.createElement("div");
+    toastEl.style.position="fixed";
+    toastEl.style.bottom="16px";
+    toastEl.style.left="16px";
+    toastEl.style.zIndex="999";
+    toastEl.style.maxWidth="min(460px, 92vw)";
+    document.body.appendChild(toastEl);
+  }
+  const t = document.createElement("div");
+  t.className = "card";
+  t.style.marginTop="8px";
+  t.style.borderRadius="16px";
+  t.style.overflow="hidden";
+  t.style.borderColor = type==="ok" ? "rgba(69,212,131,.35)" :
+                        type==="warn" ? "rgba(255,191,54,.35)" :
+                        type==="danger" ? "rgba(255,77,109,.35)" :
+                        "rgba(76,179,255,.35)";
+  t.innerHTML = `
+    <div class="body" style="display:flex; gap:10px; align-items:flex-start">
+      <div class="pill ${type==="danger"?"danger":type==="warn"?"warn":type==="ok"?"ok":"info"}">${type==="ok"?"تم":type==="warn"?"تنبيه":type==="danger"?"خطأ":"معلومة"}</div>
+      <div style="flex:1">
+        <div style="font-weight:700">${escapeHtml(msg)}</div>
+        <div class="muted" style="font-size:12px; margin-top:4px">${new Date().toLocaleTimeString("ar-JO",{hour:"2-digit", minute:"2-digit"})}</div>
+      </div>
+    </div>
+  `;
+  toastEl.appendChild(t);
+  setTimeout(()=>{ t.style.opacity="0"; t.style.transform="translateY(6px)"; t.style.transition=".25s"; }, 2600);
+  setTimeout(()=>{ t.remove(); }, 2900);
+}
+
+/* =========================
+   CONFIRM DANGER
+========================= */
+function confirmDanger(title, sub, onYes){
+  openModal({
+    title,
+    sub,
+    bodyHTML: `
+      <div class="hint">
+        <b>تأكيد:</b> ${escapeHtml(sub)}
+        <div class="hr"></div>
+        <span class="muted2">لن تستطيع التراجع بعد التنفيذ.</span>
+      </div>
+    `,
+    footHTML: `
+      <button class="btn danger" id="c_yes">نعم، نفّذ</button>
+      <button class="btn" id="c_no">إلغاء</button>
+    `,
+    onOpen: ()=>{
+      $("#c_no").addEventListener("click", closeModal);
+      $("#c_yes").addEventListener("click", ()=>{
+        closeModal();
+        onYes?.();
+      });
+    }
+  });
+}
+
+/* =========================
+   SEED DATA
+========================= */
+$("#seedBtn").addEventListener("click", ()=>{
+  // only if empty-ish
+  if(db.patients.length || db.appointments.length || db.payments.length){
+    toast("يوجد بيانات بالفعل — لن أضيف تجريبي", "warn");
+    return;
+  }
+  const p1 = {id:uid(), name:"سارة الخالدي", phone:"0790000000", fileNo:"A-001", gender:"female", birthYear:"1998", address:"عمّان", notes:"متابعة أسبوعية", pricePerSession:20, sessionsCount:3, followUps:[]};
+  const p2 = {id:uid(), name:"محمد العجارمة", phone:"0781111111", fileNo:"A-002", gender:"male", birthYear:"1989", address:"الزرقاء", notes:"حساسية أدوية", pricePerSession:25, sessionsCount:5, followUps:[]};
+  const p3 = {id:uid(), name:"لين أبو الراغب", phone:"0772222222", fileNo:"A-003", gender:"female", birthYear:"2001", address:"إربد", notes:"—", pricePerSession:15, sessionsCount:2, followUps:[]};
+  db.patients.push(p1,p2,p3);
+
+  const a1 = {id:uid(), patientId:p1.id, at:new Date(Date.now()+2*60*60*1000).toISOString().slice(0,16), status:"scheduled", note:"جلسة متابعة"};
+  const a2 = {id:uid(), patientId:p2.id, at:new Date(Date.now()+24*60*60*1000).toISOString().slice(0,16), status:"scheduled", note:"إعادة تقييم"};
+  const a3 = {id:uid(), patientId:p3.id, at:new Date(Date.now()-24*60*60*1000).toISOString().slice(0,16), status:"done", note:"تمت الجلسة"};
+  db.appointments.push(a1,a2,a3);
+
+  const pay1 = {id:uid(), patientId:p2.id, at:todayISO(), amount:50, method:"cash", note:"دفعة على الحساب"};
+  const pay2 = {id:uid(), patientId:p1.id, at:todayISO(), amount:20, method:"visa", note:"جلسة اليوم"};
+  db.payments.push(pay1,pay2);
+
+  p2.followUps.unshift({id:uid(), at:new Date().toISOString(), note:"تحسن في الأعراض، متابعة بعد أسبوع"});
+  p1.followUps.unshift({id:uid(), at:new Date().toISOString(), note:"جلسة تمارين منزلية + إرشادات"});
+
+  saveDB(db);
+  db = loadDB();
+  renderAll();
+  toast("تمت إضافة بيانات تجريبية", "ok");
+});
+
+/* =========================
+   RENDER ALL
+========================= */
+function renderAll(){
+  rebuildBadges();
+  setTodayPill();
+  renderDashboard();
+  renderPatients();
+  renderAppointments();
+  renderPayments();
+  updateStorageInfo();
+}
+
+/* =========================
+   LOGIN / AUTH
+========================= */
+function showLogin(){
+  $("#appView").classList.add("hidden");
+  $("#loginView").classList.remove("hidden");
+}
+function showApp(){
+  $("#loginView").classList.add("hidden");
+  $("#appView").classList.remove("hidden");
+}
+
+async function handleLogin(){
+  const pass = ($("#passInput").value||"").trim();
+  if(pass.length<4){
+    loginMsg("كلمة المرور قصيرة (4 أحرف+)", "warn");
+    return;
+  }
+
+  const h = await sha256(pass);
+
+  if(!hasPass()){
+    // set new password
+    localStorage.setItem(PASS_KEY, h);
+    setSession(true);
+    $("#passInput").value="";
+    loginMsg("تم تعيين كلمة المرور والدخول ✅", "ok");
+    boot();
+    return;
+  }
+
+  const saved = localStorage.getItem(PASS_KEY);
+  if(saved === h){
+    setSession(true);
+    $("#passInput").value="";
+    loginMsg("تم الدخول ✅", "ok");
+    boot();
+  }else{
+    loginMsg("كلمة المرور غير صحيحة", "danger");
+  }
+}
+
+function loginMsg(text, type="info"){
+  const el = $("#loginMsg");
+  el.classList.remove("hidden");
+  el.innerHTML = `<span class="pill ${type==="danger"?"danger":type==="warn"?"warn":type==="ok"?"ok":"info"}">${type==="ok"?"تم":type==="warn"?"تنبيه":type==="danger"?"خطأ":"معلومة"}</span> <span style="margin-inline-start:8px">${escapeHtml(text)}</span>`;
+}
+
+$("#loginBtn").addEventListener("click", handleLogin);
+$("#passInput").addEventListener("keydown", (e)=>{ if(e.key==="Enter") handleLogin(); });
+
+$("#resetPassBtn").addEventListener("click", ()=>{
+  confirmDanger("إعادة تعيين كلمة المرور؟", "سيتم حذف كلمة المرور الحالية. البيانات تبقى كما هي.", ()=>{
+    localStorage.removeItem(PASS_KEY);
+    setSession(false);
+    $("#passInput").value="";
+    loginMsg("تم حذف كلمة المرور. أدخل كلمة مرور جديدة.", "warn");
+  });
+});
+
+$("#logoutBtn").addEventListener("click", ()=>{
+  setSession(false);
+  toast("تم تسجيل الخروج", "ok");
+  boot();
+});
+
+/* =========================
+   BOOT
+========================= */
+function boot(){
+  db = loadDB();
+  if(!isLoggedIn()){
+    showLogin();
+    $("#passInput").focus();
+    return;
+  }
+  showApp();
+  switchTab(currentTab || "dashboard");
+  setStatus("Smart");
+  renderAll();
+}
+
+// init
+boot();
+</script>
+</body>
+</html>
